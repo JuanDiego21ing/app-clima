@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function TarjetaClima({ clima }) {
+export default function TarjetaClima({ datos }) {
+  const { name, main, weather } = datos;
   return (
     <View style={estilos.tarjeta}>
-      <Text style={estilos.temperatura}>{Math.round(clima.main.temp)}°</Text>
-      <Text style={estilos.descripcion}>{clima.weather[0].description}</Text>
-      <Text style={estilos.rango}>
-        Mín: {Math.round(clima.main.temp_min)}° / Máx: {Math.round(clima.main.temp_max)}°
-      </Text>
+      <Text style={estilos.ciudad}>{name}</Text>
+      <Text style={estilos.descripcion}>{weather[0].description}</Text>
+      <Text style={estilos.temperatura}>🌡 {main.temp.toFixed(1)} °C</Text>
+      <Text style={estilos.minmax}>Mín: {main.temp_min}°C / Máx: {main.temp_max}°C</Text>
     </View>
   );
 }
@@ -17,21 +17,28 @@ const estilos = StyleSheet.create({
   tarjeta: {
     backgroundColor: '#ffffffcc',
     padding: 20,
-    borderRadius: 15,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
     alignItems: 'center',
-    width: 250,
   },
-  temperatura: {
-    fontSize: 48,
+  ciudad: {
+    fontSize: 26,
     fontWeight: 'bold',
   },
   descripcion: {
     fontSize: 18,
-    marginVertical: 5,
-    textTransform: 'capitalize',
+    fontStyle: 'italic',
   },
-  rango: {
-    fontSize: 14,
-    color: '#333',
+  temperatura: {
+    fontSize: 32,
+    marginVertical: 10,
+  },
+  minmax: {
+    fontSize: 16,
+    color: '#555',
   },
 });
