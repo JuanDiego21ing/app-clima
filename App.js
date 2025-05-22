@@ -9,13 +9,18 @@ export default function App() {
   const [ciudadActual, setCiudadActual] = useState('Londres');
 
   const obtenerClima = async (ciudad) => {
+    if (!ciudad || ciudad.trim() === '') {
+      Alert.alert('Error', 'Por favor ingresa el nombre de una ciudad válida.');
+      return;
+    }
+
     try {
       const datos = await obtenerClimaPorCiudad(ciudad);
       setClima(datos);
       setCiudadActual(ciudad);
     } catch (error) {
-      console.error('Error al obtener datos del clima:', error);
-      Alert.alert('Error', 'No se pudo obtener el clima para esa ciudad.');
+      console.error(`Error al obtener datos del clima para la ciudad "${ciudad}":`, error);
+      Alert.alert('Error', `No se pudo obtener el clima para "${ciudad}".`);
     }
   };
 
