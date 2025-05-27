@@ -1,18 +1,43 @@
 // App.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, StatusBar, ActivityIndicator, ScrollView, Platform } from 'react-native'; // <--- CORRECCIÓN AQUÍ
+import { View, Text, StyleSheet, Alert, StatusBar, ActivityIndicator, ScrollView, Platform } from 'react-native';
+import * as Location from 'expo-location'; 
 import BuscadorCiudad from './componentes/BuscarCiudad';
 import TarjetaClima from './componentes/TarjetaClima';
 import ListaPronosticos from './componentes/ListaPronosticos';
-import { obtenerClimaPorCiudad, obtenerPronosticoPorCoordenadas } from './api/apiClima';
+import { obtenerClimaPorCiudad, obtenerPronosticoPorCoordenadas, obtenerClimaPorCoords } from './api/apiClima';
 
 export default function App() {
   const [clima, setClima] = useState(null);
   const [pronostico, setPronostico] = useState(null);
-  const [ciudadActual, setCiudadActual] = useState('Londres');
   const [cargando, setCargando] = useState(true);
 
-  const obtenerDatosCompletos = async (ciudad) => {
+  const obtenerDatosPorUbicacion = async () => {
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permiso denegado', 'Se requiere permiso de ubicación para mostrar el clima local.');
+        return;
+      }
+
+      const ubicacion = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = ubicacion.coords;
+
+      const datosClima = await obtenerClimaPorCoords(latitude, longitude);
+      setClima(datosClima);
+
+      const datosPronostico = await obtenerPronosticoPorCoordenadas(latitude, longitude);
+      setPronostico(datosPronostico);
+
+    } catch (error) {
+      console.error("Error obteniendo ubicación o clima:", error);
+      Alert.alert('Error', 'No se pudo obtener el clima local.');
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const obtenerDatosPorCiudad = async (ciudad) => {
     if (!ciudad || ciudad.trim() === '') {
       Alert.alert('Error', 'Por favor ingresa el nombre de una ciudad válida.');
       return;
@@ -25,50 +50,40 @@ export default function App() {
     try {
       const datosClima = await obtenerClimaPorCiudad(ciudad);
       setClima(datosClima);
-      setCiudadActual(datosClima.name);
 
-      if (datosClima.coord) {
-        const datosPronostico = await obtenerPronosticoPorCoordenadas(datosClima.coord.lat, datosClima.coord.lon);
-        setPronostico(datosPronostico);
-      } else {
-        Alert.alert('Error', 'No se pudieron obtener las coordenadas para el pronóstico.');
-      }
-
+      const { lat, lon } = datosClima.coord;
+      const datosPronostico = await obtenerPronosticoPorCoordenadas(lat, lon);
+      setPronostico(datosPronostico);
     } catch (error) {
-      console.error(`Error al obtener datos del clima para la ciudad "${ciudad}":`, error);
-      Alert.alert('Error', `No se pudo obtener el clima para "${ciudad}". Intenta de nuevo.`);
+      Alert.alert('Error', `No se pudo obtener el clima para "${ciudad}".`);
     } finally {
       setCargando(false);
     }
   };
 
   useEffect(() => {
-    obtenerDatosCompletos(ciudadActual);
+    obtenerDatosPorUbicacion();
   }, []);
 
   return (
     <ScrollView contentContainerStyle={estilos.scrollContenedor}>
       <View style={estilos.contenedor}>
         <StatusBar barStyle="light-content" backgroundColor="#6a9fce" />
-        <BuscadorCiudad onBuscar={obtenerDatosCompletos} />
+        <BuscadorCiudad onBuscar={obtenerDatosPorCiudad} />
 
-        {cargando && (
+        {cargando ? (
           <View style={estilos.contenedorCarga}>
             <ActivityIndicator size="large" color="#fff" />
             <Text style={estilos.cargandoTexto}>Cargando clima...</Text>
           </View>
-        )}
-
-        {!cargando && clima && (
-          <TarjetaClima datos={clima} />
-        )}
-
-        {!cargando && pronostico && pronostico.daily && (
-          <ListaPronosticos pronostico={pronostico} />
-        )}
-
-        {!cargando && !clima && !pronostico && (
-           <Text style={estilos.cargandoTexto}>No se pudieron cargar los datos.</Text>
+        ) : (
+          <>
+            {clima && <TarjetaClima datos={clima} />}
+            {pronostico && pronostico.daily && <ListaPronosticos pronostico={pronostico} />}
+            {!clima && !pronostico && (
+              <Text style={estilos.cargandoTexto}>No se pudieron cargar los datos.</Text>
+            )}
+          </>
         )}
       </View>
     </ScrollView>
@@ -83,7 +98,7 @@ const estilos = StyleSheet.create({
     flex: 1,
     backgroundColor: '#a8d0f0',
     padding: 16,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 10 : 50, // Aquí se usa Platform
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 10 : 50,
     alignItems: 'center',
   },
   contenedorCarga: {
