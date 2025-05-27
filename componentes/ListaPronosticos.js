@@ -1,32 +1,30 @@
 // componentes/ListaPronosticos.js
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native'; // Removimos FlatList de los imports
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import PronosticoDia from './PronosticoDia';
 
 const ListaPronosticos = ({ pronostico }) => {
-  if (!pronostico || !pronostico.daily || pronostico.daily.length === 0) {
+  if (!pronostico?.daily?.length) {
     return <Text style={estilos.mensaje}>No hay datos de pronóstico disponibles.</Text>;
   }
 
-  // Tomamos los próximos 7 días
   const proximosSieteDias = pronostico.daily.slice(0, 7);
 
   return (
-    <View style={estilos.contenedorLista}>
+    <View style={estilos.contenedor}>
       <Text style={estilos.titulo}>Pronóstico 7 Días</Text>
-      {/* Mapeamos directamente los datos en lugar de usar FlatList */}
-      {proximosSieteDias.map(item => (
-        <PronosticoDia key={item.dt.toString()} diaData={item} />
-      ))}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {proximosSieteDias.map(item => (
+          <PronosticoDia key={item.dt.toString()} diaData={item} />
+        ))}
+      </ScrollView>
     </View>
   );
 };
 
 const estilos = StyleSheet.create({
-  contenedorLista: {
+  contenedor: {
     marginTop: 20,
-    width: '100%',
-    alignItems: 'center', // Para centrar los PronosticoDia si su ancho es menor al 100%
   },
   titulo: {
     fontSize: 20,
@@ -39,7 +37,7 @@ const estilos = StyleSheet.create({
     textAlign: 'center',
     color: '#fff',
     marginTop: 10,
-  }
+  },
 });
 
 export default ListaPronosticos;

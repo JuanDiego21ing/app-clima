@@ -6,101 +6,66 @@ const PronosticoDia = ({ diaData }) => {
   if (!diaData) return null;
 
   const fecha = new Date(diaData.dt * 1000);
-  // 'short' para día de la semana y mes, 'numeric' para el día del mes
-  const opcionesFecha = { weekday: 'short', day: 'numeric', month: 'short' };
-  // Limpiar el punto final que a veces agrega toLocaleDateString en algunas configuraciones
-  const fechaFormateada = fecha.toLocaleDateString('es-ES', opcionesFecha).replace(/\.$/, '');
+  const nombreDia = fecha.toLocaleDateString('es-ES', { weekday: 'short' }).toUpperCase();
+  const diaMes = fecha.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
 
   const iconoClima = diaData.weather[0].icon;
   const urlIcono = `http://openweathermap.org/img/wn/${iconoClima}@2x.png`;
 
   return (
-    <View style={estilos.contenedorDia}>
-      <View style={estilos.seccionFecha}>
-        <Text style={estilos.fecha}>{fechaFormateada}</Text>
-      </View>
-
-      <View style={estilos.seccionIcono}>
-        <Image source={{ uri: urlIcono }} style={estilos.icono} />
-      </View>
-
-      <View style={estilos.seccionDescripcion}>
-        <Text style={estilos.descripcion} numberOfLines={1} ellipsizeMode="tail">
-          {diaData.weather[0].description}
-        </Text>
-      </View>
-
-      <View style={estilos.seccionTemperaturas}>
-        <Text style={estilos.temperatura}>
-          {Math.round(diaData.temp.max)}°
-        </Text>
-        <Text style={estilos.temperaturaMin}>
-          {Math.round(diaData.temp.min)}°
-        </Text>
-      </View>
+    <View style={estilos.card}>
+      <Text style={estilos.dia}>{nombreDia}</Text>
+      <Text style={estilos.fecha}>{diaMes}</Text>
+      <Image source={{ uri: urlIcono }} style={estilos.icono} />
+      <Text style={estilos.temperaturas}>
+        <Text style={estilos.max}>{Math.round(diaData.temp.max)}° </Text>
+        <Text style={estilos.min}>/ {Math.round(diaData.temp.min)}°</Text>
+      </Text>
     </View>
   );
 };
 
 const estilos = StyleSheet.create({
-  contenedorDia: {
-    flexDirection: 'row', // <--- CLAVE PARA LAYOUT HORIZONTAL
-    alignItems: 'center', // Centra los ítems verticalmente dentro de la fila
-    backgroundColor: 'rgba(255, 255, 255, 0.4)', // Un poco más opaco para mejor legibilidad
+  card: {
+    backgroundColor: 'white',
     borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    marginVertical: 5, // Espacio entre tarjetas
-    width: '100%', // Ocupa el ancho disponible
+    padding: 12,
+    alignItems: 'center',
+    marginRight: 10,
+    width: 100,
+    height: 200,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.20,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
     shadowRadius: 1.41,
-    elevation: 2,
+    elevation: 3,
   },
-  seccionFecha: {
-    flex: 2.5, // Proporción del espacio que ocupa
-    alignItems: 'flex-start',
+  dia: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#007AFF',
   },
   fecha: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#2c3e50', // Un color más oscuro para el texto principal
+    fontSize: 13,
+    color: '#555',
+    marginBottom: 6,
     textTransform: 'capitalize',
-  },
-  seccionIcono: {
-    flex: 1.2, // Proporción para el icono
-    alignItems: 'center', // Centra el icono en su sección
   },
   icono: {
-    width: 45, // Ajusta según tu preferencia
-    height: 45,
+    width: 50,
+    height: 50,
+    marginVertical: 4,
   },
-  seccionDescripcion: {
-    flex: 3, // Más espacio para la descripción
-    paddingHorizontal: 8, // Espacio alrededor de la descripción
-    alignItems: 'flex-start',
-  },
-  descripcion: {
+  temperaturas: {
+    marginTop: 6,
     fontSize: 14,
-    color: '#34495e',
-    textTransform: 'capitalize',
   },
-  seccionTemperaturas: {
-    flex: 1.5, // Espacio para las temperaturas
-    alignItems: 'flex-end', // Alinea las temperaturas a la derecha de su sección
-  },
-  temperatura: {
-    fontSize: 16,
+  max: {
+    color: '#e74c3c',
     fontWeight: 'bold',
-    color: '#2c3e50',
   },
-  temperaturaMin: {
-    fontSize: 14,
-    color: '#7f8c8d', // Un color más suave para la temperatura mínima
+  min: {
+    color: '#3498db',
   },
 });
 
