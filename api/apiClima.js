@@ -15,6 +15,27 @@ export const obtenerClimaPorCiudad = async (ciudad) => {
   }
 };
 
+export const obtenerClimaCompleto = async (lat, lon) => {
+  const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&appid=${API_KEY}&units=metric&lang=es`;
+
+  try {
+    const respuesta = await axios.get(url);
+    return {
+      temperatura: respuesta.data.current.temp,
+      sensacionTermica: respuesta.data.current.feels_like,
+      humedad: respuesta.data.current.humidity,
+      presion: respuesta.data.current.pressure,
+      visibilidad: respuesta.data.current.visibility,
+      viento: respuesta.data.current.wind_speed,
+      indiceUV: respuesta.data.current.uvi, 
+    };
+  } catch (error) {
+    console.error("Error en obtenerClimaCompleto:", error.response ? error.response.data : error.message);
+    throw error;
+  }
+};
+
+
 export const obtenerPronosticoPorCoordenadas = async (lat, lon) => {
   
   const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&appid=${API_KEY}&units=metric&lang=es`;

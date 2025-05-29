@@ -1,14 +1,15 @@
-// App.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert, StatusBar, ActivityIndicator, ScrollView, Platform } from 'react-native';
-import * as Location from 'expo-location'; 
+import * as Location from 'expo-location';
 import BuscadorCiudad from './componentes/BuscarCiudad';
 import TarjetaClima from './componentes/TarjetaClima';
+import TarjetaClimaCaract from './componentes/TarjetaClimaCaract';
 import ListaPronosticos from './componentes/ListaPronosticos';
-import { obtenerClimaPorCiudad, obtenerPronosticoPorCoordenadas, obtenerClimaPorCoords } from './api/apiClima';
+import { obtenerClimaPorCiudad, obtenerPronosticoPorCoordenadas, obtenerClimaPorCoords, obtenerClimaCompleto } from './api/apiClima';
 
 export default function App() {
   const [clima, setClima] = useState(null);
+  const [climaExtra, setClimaExtra] = useState(null);
   const [pronostico, setPronostico] = useState(null);
   const [cargando, setCargando] = useState(true);
 
@@ -29,6 +30,9 @@ export default function App() {
       const datosPronostico = await obtenerPronosticoPorCoordenadas(latitude, longitude);
       setPronostico(datosPronostico);
 
+      const datosClimaExtra = await obtenerClimaCompleto(latitude, longitude);
+      setClimaExtra(datosClimaExtra);
+
     } catch (error) {
       console.error("Error obteniendo ubicación o clima:", error);
       Alert.alert('Error', 'No se pudo obtener el clima local.');
@@ -46,6 +50,7 @@ export default function App() {
     setCargando(true);
     setClima(null);
     setPronostico(null);
+    setClimaExtra(null);
 
     try {
       const datosClima = await obtenerClimaPorCiudad(ciudad);
@@ -54,6 +59,9 @@ export default function App() {
       const { lat, lon } = datosClima.coord;
       const datosPronostico = await obtenerPronosticoPorCoordenadas(lat, lon);
       setPronostico(datosPronostico);
+
+      const datosClimaExtra = await obtenerClimaCompleto(lat, lon);
+      setClimaExtra(datosClimaExtra);
     } catch (error) {
       Alert.alert('Error', `No se pudo obtener el clima para "${ciudad}".`);
     } finally {
@@ -79,6 +87,7 @@ export default function App() {
         ) : (
           <>
             {clima && <TarjetaClima datos={clima} />}
+            {climaExtra && <TarjetaClimaCaract datos={climaExtra} />}
             {pronostico && pronostico.daily && <ListaPronosticos pronostico={pronostico} />}
             {!clima && !pronostico && (
               <Text style={estilos.cargandoTexto}>No se pudieron cargar los datos.</Text>

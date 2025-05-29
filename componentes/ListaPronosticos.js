@@ -24,12 +24,11 @@ const ListaPronosticos = ({ pronostico }) => {
 
 const estilos = StyleSheet.create({
   contenedor: {
-    marginTop: 20,
   },
   titulo: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#black',
     marginBottom: 10,
     textAlign: 'center',
   },

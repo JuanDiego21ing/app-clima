@@ -50,7 +50,7 @@ const estilos = StyleSheet.create({
   ciudad: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#2c3e50",
+    color: "#black",
   },
   descripcion: {
     fontSize: 16,
