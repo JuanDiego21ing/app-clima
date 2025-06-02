@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, StatusBar, ActivityIndicator, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, Alert, StatusBar, ActivityIndicator, ScrollView, Platform, ImageBackground } from 'react-native';
 import * as Location from 'expo-location';
 import BuscadorCiudad from './componentes/BuscarCiudad';
 import TarjetaClima from './componentes/TarjetaClima';
@@ -74,38 +74,48 @@ export default function App() {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={estilos.scrollContenedor}>
-      <View style={estilos.contenedor}>
-        <StatusBar barStyle="light-content" backgroundColor="#6a9fce" />
-        <BuscadorCiudad onBuscar={obtenerDatosPorCiudad} />
+    <ImageBackground
+      source={require('./assets/fondo1.jpg')}
+      style={estilos.fondo}
+      resizeMode="cover"
+    >
+      <ScrollView contentContainerStyle={estilos.scrollContenedor}>
+        <View style={estilos.contenedor}>
+          <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+          <BuscadorCiudad onBuscar={obtenerDatosPorCiudad} />
 
-        {cargando ? (
-          <View style={estilos.contenedorCarga}>
-            <ActivityIndicator size="large" color="#fff" />
-            <Text style={estilos.cargandoTexto}>Cargando clima...</Text>
-          </View>
-        ) : (
-          <>
-            {clima && <TarjetaClima datos={clima} />}
-            {climaExtra && <TarjetaClimaCaract datos={climaExtra} />}
-            {pronostico && pronostico.daily && <ListaPronosticos pronostico={pronostico} />}
-            {!clima && !pronostico && (
-              <Text style={estilos.cargandoTexto}>No se pudieron cargar los datos.</Text>
-            )}
-          </>
-        )}
-      </View>
-    </ScrollView>
+          {cargando ? (
+            <View style={estilos.contenedorCarga}>
+              <ActivityIndicator size="large" color="#fff" />
+              <Text style={estilos.cargandoTexto}>Cargando clima...</Text>
+            </View>
+          ) : (
+            <>
+              {clima && <TarjetaClima datos={clima} />}
+              {climaExtra && <TarjetaClimaCaract datos={climaExtra} />}
+              {pronostico && pronostico.daily && <ListaPronosticos pronostico={pronostico} />}
+              {!clima && !pronostico && (
+                <Text style={estilos.cargandoTexto}>No se pudieron cargar los datos.</Text>
+              )}
+            </>
+          )}
+        </View>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const estilos = StyleSheet.create({
+  fondo: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   scrollContenedor: {
     flexGrow: 1,
   },
   contenedor: {
     flex: 1,
-    backgroundColor: '#a8d0f0',
     padding: 16,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 10 : 50,
     alignItems: 'center',

@@ -27,6 +27,7 @@ export default function BuscadorCiudad({ onBuscar }) {
 
 const estilos = StyleSheet.create({
   contenedor: {
+    
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,

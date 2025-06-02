@@ -1,4 +1,3 @@
-// componentes/PronosticoDia.js
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
@@ -27,27 +26,23 @@ const PronosticoDia = ({ diaData }) => {
 
 const estilos = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "rgba(29, 29, 29, 0.25)", 
     borderRadius: 12,
     padding: 12,
     alignItems: 'center',
     marginRight: 10,
     width: 100,
     height: 200,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 3,
+   
   },
   dia: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#ffffff',
   },
   fecha: {
     fontSize: 13,
-    color: '#555',
+    color: '#eeeeee',
     marginBottom: 6,
     textTransform: 'capitalize',
   },
@@ -61,11 +56,11 @@ const estilos = StyleSheet.create({
     fontSize: 14,
   },
   max: {
-    color: '#e74c3c',
+    color: '#ff6b6b',
     fontWeight: 'bold',
   },
   min: {
-    color: '#3498db',
+    color: '#82ccff',
   },
 });
 

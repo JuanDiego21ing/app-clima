@@ -28,22 +28,18 @@ export default function TarjetaClimaCaract({ datos }) {
 
 const estilos = StyleSheet.create({
   tarjeta: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "rgba(29, 29, 29, 0.25)", 
     borderRadius: 12,
     padding: 16,
     marginBottom: 15,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 4,
     width: "100%",
     alignItems: "center",
   },
   titulo: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#2c3e50",
+    color: "#ffffff",
     marginBottom: 10,
     textAlign: "center",
   },
@@ -52,7 +48,7 @@ const estilos = StyleSheet.create({
   },
   texto: {
     fontSize: 16,
-    color: "#34495e",
+    color: "#f0f0f0",
     marginBottom: 4,
   },
 });

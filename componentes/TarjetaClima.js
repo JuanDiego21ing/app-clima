@@ -31,15 +31,10 @@ export default function TarjetaClima({ datos }) {
 
 const estilos = StyleSheet.create({
   tarjeta: {
-    backgroundColor: "rgb(255, 255, 255)",
-    borderRadius: 12,
+    backgroundColor: "rgba(29, 29, 29, 0.25)", 
+    borderRadius: 16,
     padding: 16,
     marginBottom: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 4,
     width: "100%",
     alignItems: "center",
   },
@@ -48,48 +43,46 @@ const estilos = StyleSheet.create({
     marginBottom: 10,
   },
   ciudad: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: "bold",
-    color: "#black",
+    color: "#ffffff", 
   },
   descripcion: {
     fontSize: 16,
-    color: "#34495e",
+    color: "#ecf0f1",
     textTransform: "capitalize",
   },
- contenido: {
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '100%',
-  position: 'relative',
-},
-iconoContenedor: {
-  position: 'absolute',
-  left: 40,
-},
-icono: {
-  width: 80,
-  height: 60,
-},
-temperaturas: {
-  alignItems: 'center',
-  marginLeft: 0, 
-},
-temperatura: {
-  fontSize: 28,
-  fontWeight: 'bold',
-  color: '#2c3e50',
-},
-minmax: {
-  fontSize: 14,
-  color: '#7f8c8d',
-  marginTop: 2,
-},
-viento: {
-  fontSize: 14,
-  color: '#2980b9',
-  marginTop: 2,
-},
-
+  contenido: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    position: "relative",
+  },
+  iconoContenedor: {
+    position: "absolute",
+    left: 40,
+  },
+  icono: {
+    width: 80,
+    height: 60,
+  },
+  temperaturas: {
+    alignItems: "center",
+  },
+  temperatura: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#ffffff",
+  },
+  minmax: {
+    fontSize: 14,
+    color: "#f1f1f1",
+    marginTop: 2,
+  },
+  viento: {
+    fontSize: 14,
+    color: "#d0e6f7",
+    marginTop: 2,
+  },
 });
