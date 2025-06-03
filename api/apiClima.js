@@ -1,6 +1,4 @@
-
 import axios from 'axios';
-
 
 const API_KEY = '522c549a0bd63182b897ab2c0fb7b4b4';
 
@@ -17,7 +15,6 @@ export const obtenerClimaPorCiudad = async (ciudad) => {
 
 export const obtenerClimaCompleto = async (lat, lon) => {
   const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&appid=${API_KEY}&units=metric&lang=es`;
-
   try {
     const respuesta = await axios.get(url);
     return {
@@ -35,9 +32,7 @@ export const obtenerClimaCompleto = async (lat, lon) => {
   }
 };
 
-
 export const obtenerPronosticoPorCoordenadas = async (lat, lon) => {
-  
   const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&appid=${API_KEY}&units=metric&lang=es`;
   try {
     const respuesta = await axios.get(url);
@@ -55,6 +50,17 @@ export const obtenerClimaPorCoords = async (lat, lon) => {
     return respuesta.data;
   } catch (error) {
     console.error("Error en obtenerClimaPorCoords:", error.response ? error.response.data : error.message);
+    throw error;
+  }
+};
+
+export const obtenerCalidadAire = async (lat, lon) => {
+  const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+  try {
+    const respuesta = await axios.get(url);
+    return respuesta.data;
+  } catch (error) {
+    console.error("Error en obtenerCalidadAire:", error.response ? error.response.data : error.message);
     throw error;
   }
 };

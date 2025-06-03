@@ -28,7 +28,7 @@ const estilos = StyleSheet.create({
   titulo: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#black',
+    color: '#fff',
     marginBottom: 10,
     textAlign: 'center',
   },

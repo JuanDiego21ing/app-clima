@@ -4,13 +4,16 @@ import * as Location from 'expo-location';
 import BuscadorCiudad from './componentes/BuscarCiudad';
 import TarjetaClima from './componentes/TarjetaClima';
 import TarjetaClimaCaract from './componentes/TarjetaClimaCaract';
+import TarjetaCalidadAire from './componentes/TarjetaCalidadAire'; 
 import ListaPronosticos from './componentes/ListaPronosticos';
-import { obtenerClimaPorCiudad, obtenerPronosticoPorCoordenadas, obtenerClimaPorCoords, obtenerClimaCompleto } from './api/apiClima';
+
+import {obtenerClimaPorCiudad,obtenerPronosticoPorCoordenadas,obtenerClimaPorCoords,obtenerClimaCompleto,obtenerCalidadAire } from './api/apiClima';
 
 export default function App() {
   const [clima, setClima] = useState(null);
   const [climaExtra, setClimaExtra] = useState(null);
   const [pronostico, setPronostico] = useState(null);
+  const [calidadAire, setCalidadAire] = useState(null); 
   const [cargando, setCargando] = useState(true);
 
   const obtenerDatosPorUbicacion = async () => {
@@ -33,6 +36,9 @@ export default function App() {
       const datosClimaExtra = await obtenerClimaCompleto(latitude, longitude);
       setClimaExtra(datosClimaExtra);
 
+      const datosCalidad = await obtenerCalidadAire(latitude, longitude); 
+      setCalidadAire(datosCalidad);
+
     } catch (error) {
       console.error("Error obteniendo ubicación o clima:", error);
       Alert.alert('Error', 'No se pudo obtener el clima local.');
@@ -51,6 +57,7 @@ export default function App() {
     setClima(null);
     setPronostico(null);
     setClimaExtra(null);
+    setCalidadAire(null); 
 
     try {
       const datosClima = await obtenerClimaPorCiudad(ciudad);
@@ -62,6 +69,10 @@ export default function App() {
 
       const datosClimaExtra = await obtenerClimaCompleto(lat, lon);
       setClimaExtra(datosClimaExtra);
+
+      const datosCalidad = await obtenerCalidadAire(lat, lon); 
+      setCalidadAire(datosCalidad);
+
     } catch (error) {
       Alert.alert('Error', `No se pudo obtener el clima para "${ciudad}".`);
     } finally {
@@ -93,6 +104,7 @@ export default function App() {
             <>
               {clima && <TarjetaClima datos={clima} />}
               {climaExtra && <TarjetaClimaCaract datos={climaExtra} />}
+              {calidadAire && <TarjetaCalidadAire datos={calidadAire} />} 
               {pronostico && pronostico.daily && <ListaPronosticos pronostico={pronostico} />}
               {!clima && !pronostico && (
                 <Text style={estilos.cargandoTexto}>No se pudieron cargar los datos.</Text>
